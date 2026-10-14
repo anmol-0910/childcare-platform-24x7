@@ -18,14 +18,10 @@ app.use('/api/centers', require('./routes/centerRoutes'));
 app.use('/api/bookings', require('./routes/bookingRoutes'));
 
 // Serve Frontend Static Files (automatically serves index.html at '/')
-const frontendPath = path.join(__dirname, '../frontend');
-app.use(express.static(frontendPath));
-
-// Express 5 compatible catch-all route for frontend SPA
-app.get(/.*/, (req, res) => {
-  res.sendFile(path.join(frontendPath, 'index.html'));
+// Basic route for the API root
+app.get('/', (req, res) => {
+  res.status(200).json({ message: 'Little Steps Backend API is running successfully!' });
 });
-
 // Global Error Handler
 app.use((err, req, res, next) => {
   console.error(err.stack);
