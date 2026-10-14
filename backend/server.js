@@ -35,14 +35,21 @@ app.use((err, req, res, next) => {
   });
 });
 
-// Start Server (Declared only ONCE)
-const PORT = process.env.PORT || 5000;
-const server = app.listen(PORT, () => {
-  console.log(`Server running on http://localhost:${PORT}`);
-});
+// ----------------------------------------------------------------
+// VERCEL FIX: Only listen locally. Export the app for production.
+// ----------------------------------------------------------------
+if (process.env.NODE_ENV !== 'production') {
+  const PORT = process.env.PORT || 5000;
+  const server = app.listen(PORT, () => {
+    console.log(`Server running on http://localhost:${PORT}`);
+  });
 
-// Handle unhandled promise rejections
-process.on('unhandledRejection', (err) => {
-  console.error(`Error: ${err.message}`);
-  server.close(() => process.exit(1));
-});
+  // Handle unhandled promise rejections
+  process.on('unhandledRejection', (err) => {
+    console.error(`Error: ${err.message}`);
+    server.close(() => process.exit(1));
+  });
+}
+
+// Export the app for Vercel Serverless Functions
+module.exports = app;
